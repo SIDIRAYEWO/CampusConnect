@@ -138,9 +138,13 @@ AUTH_USER_MODEL = "accounts.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+       # "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "apps.accounts.middleware.token_blacklist.BlacklistJWTAuthentication",
     ),
       "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
 }
+
+REDIS_HOST = 'redis'
+REDIS_PORT = 6379
