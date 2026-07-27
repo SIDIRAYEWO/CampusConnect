@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # Local apps
     "rest_framework",
     "apps.accounts",
+    "apps.students",
 ]
 
 PASSWORD_HASHERS = [

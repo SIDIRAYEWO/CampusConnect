@@ -1,7 +1,9 @@
 Django==5.2
-djangorestframework
+djangorestframework==3.17.1
+djangorestframework-simplejwt==5.5.1
 psycopg[binary]
 django-environ
 redis
 celery
 Pillow
+argon2-cffi
