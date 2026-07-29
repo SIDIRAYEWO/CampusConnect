@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "apps.accounts",
     "apps.students",
+    "apps.announcements",
+    "apps.events",
 ]
 
 PASSWORD_HASHERS = [

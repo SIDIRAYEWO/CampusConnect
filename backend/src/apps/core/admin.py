@@ -1,3 +1,3 @@
 from django.contrib import admin
 
-# Register your models here.
+# Shared abstract models are not registered in the admin.

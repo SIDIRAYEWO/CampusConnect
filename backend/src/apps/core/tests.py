@@ -1,3 +1,10 @@
 from django.test import TestCase
 
-# Create your tests here.
+
+class CoreModelsTest(TestCase):
+    """
+    Placeholder for future shared model tests.
+    """
+
+    def test_placeholder(self):
+        self.assertTrue(True)

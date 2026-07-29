@@ -26,4 +26,6 @@ urlpatterns = [
     path('api/v1/', include('apps.students.urls')),
     path('api/v1/auth/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path("api/v1/", include("apps.announcements.urls")),
+    path("api/v1/", include("apps.events.urls")),
 ]

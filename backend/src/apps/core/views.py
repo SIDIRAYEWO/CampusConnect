@@ -1,3 +1,2 @@
-from django.shortcuts import render
-
-# Create your views here.
+# Shared models only.
+# This app intentionally contains no views.
