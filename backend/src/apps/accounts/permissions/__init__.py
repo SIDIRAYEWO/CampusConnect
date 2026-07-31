@@ -1,6 +1,7 @@
 from .base import (
+    IsAuthenticatedUser,
     IsStudent,
     IsLecturer,
-    IsClubExec,
     IsAdmin,
+    IsOrganizationExecutive,
 )

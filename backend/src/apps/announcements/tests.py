@@ -1,9 +1,8 @@
-from django.urls import reverse
-
-from rest_framework.test import APITestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 
 from apps.accounts.models import User
+from apps.organizations.models import Organization
 
 from .models import Announcement
 
@@ -18,16 +17,17 @@ class AnnouncementModelTest(APITestCase):
             email="admin@test.com",
         )
 
-        self.student = User.objects.create_user(
-            username="student_test",
-            password="Student@123",
-            role="STUDENT",
-            email="student@test.com",
+        self.organization = Organization.objects.create(
+            name="Computer Science Society",
+            description="Official Computer Science Society",
+            organization_type=Organization.OrganizationType.SOCIETY,
+            is_verified=True,
         )
 
     def test_create_announcement(self):
         announcement = Announcement.objects.create(
             author=self.admin,
+            organization=self.organization,
             title="Semester Opens",
             content="Semester begins next Monday.",
         )
@@ -40,6 +40,11 @@ class AnnouncementModelTest(APITestCase):
         self.assertEqual(
             announcement.author,
             self.admin,
+        )
+
+        self.assertEqual(
+            announcement.organization,
+            self.organization,
         )
 
 
@@ -60,6 +65,13 @@ class AnnouncementAPITest(APITestCase):
             email="student_api@test.com",
         )
 
+        self.organization = Organization.objects.create(
+            name="Students Representative Council",
+            description="SRC",
+            organization_type=Organization.OrganizationType.SRC,
+            is_verified=True,
+        )
+
         self.url = "/api/v1/announcements/"
 
     def authenticate(self, user):
@@ -71,14 +83,16 @@ class AnnouncementAPITest(APITestCase):
         response = self.client.post(
             self.url,
             {
+                "organization": str(self.organization.id),
                 "title": "Registration Opens",
                 "content": "Registration starts next week.",
-                "audience": "ALL",
                 "priority": "HIGH",
                 "status": "PUBLISHED",
             },
             format="json",
         )
+
+       
 
         self.assertEqual(
             response.status_code,
@@ -92,10 +106,14 @@ class AnnouncementAPITest(APITestCase):
             self.admin,
         )
 
+        self.assertEqual(
+            announcement.organization,
+            self.organization,
+        )
+
         self.assertIsNotNone(
             announcement.published_at,
         )
-
 
     def test_student_cannot_create_announcement(self):
         self.authenticate(self.student)
@@ -103,9 +121,9 @@ class AnnouncementAPITest(APITestCase):
         response = self.client.post(
             self.url,
             {
+                "organization": str(self.organization.id),
                 "title": "Fake Announcement",
                 "content": "Students should not publish this.",
-                "audience": "ALL",
                 "priority": "NORMAL",
                 "status": "PUBLISHED",
             },
@@ -117,11 +135,8 @@ class AnnouncementAPITest(APITestCase):
             status.HTTP_403_FORBIDDEN,
         )
 
-
     def test_unauthenticated_user_cannot_access(self):
-        response = self.client.get(
-            self.url,
-        )
+        response = self.client.get(self.url)
 
         self.assertEqual(
             response.status_code,

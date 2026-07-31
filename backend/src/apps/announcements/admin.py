@@ -5,39 +5,32 @@ from .models import Announcement
 
 @admin.register(Announcement)
 class AnnouncementAdmin(admin.ModelAdmin):
-    list_display = (
+
+    list_display = [
         "title",
+        "organization",
         "author",
-        "audience",
         "priority",
         "status",
         "published_at",
         "created_at",
-    )
+    ]
 
-    list_filter = (
-        "audience",
+    list_filter = [
+        "organization",
         "priority",
         "status",
-        "created_at",
-        "published_at",
-    )
+    ]
 
-    search_fields = (
+    search_fields = [
         "title",
         "content",
+        "organization__name",
         "author__username",
-        "author__email",
-    )
+    ]
 
-    readonly_fields = (
-        "id",
+    readonly_fields = [
         "created_at",
         "updated_at",
-    )
-
-    ordering = (
-        "-created_at",
-    )
-
-    list_per_page = 25
+        "deleted_at",
+    ]

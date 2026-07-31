@@ -1,20 +1,35 @@
 from rest_framework import serializers
 
 from .models import (
-    Club,
-    ClubMembership,
+    Organization,
+    OrganizationMembership,
 )
 
 
-class ClubSerializer(serializers.ModelSerializer):
+class OrganizationSerializer(serializers.ModelSerializer):
+
+    parent_name = serializers.CharField(
+        source="parent.name",
+        read_only=True,
+    )
+
+    registered_with_name = serializers.CharField(
+        source="registered_with.name",
+        read_only=True,
+    )
+
     class Meta:
-        model = Club
+        model = Organization
 
         fields = [
             "id",
             "name",
             "description",
-            "category",
+            "organization_type",
+            "parent",
+            "parent_name",
+            "registered_with",
+            "registered_with_name",
             "logo",
             "email",
             "advisor_name",
@@ -26,33 +41,35 @@ class ClubSerializer(serializers.ModelSerializer):
 
         read_only_fields = [
             "id",
+            "parent_name",
+            "registered_with_name",
             "created_at",
             "updated_at",
             "deleted_at",
         ]
 
 
-class ClubMembershipSerializer(serializers.ModelSerializer):
+class OrganizationMembershipSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(
         source="user.username",
         read_only=True,
     )
 
-    club_name = serializers.CharField(
-        source="club.name",
+    organization_name = serializers.CharField(
+        source="organization.name",
         read_only=True,
     )
 
     class Meta:
-        model = ClubMembership
+        model = OrganizationMembership
 
         fields = [
             "id",
             "user",
             "username",
-            "club",
-            "club_name",
+            "organization",
+            "organization_name",
             "role",
             "status",
             "joined_at",
@@ -63,7 +80,7 @@ class ClubMembershipSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "id",
             "username",
-            "club_name",
+            "organization_name",
             "joined_at",
             "created_at",
             "updated_at",

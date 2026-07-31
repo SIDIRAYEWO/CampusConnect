@@ -45,8 +45,8 @@ INSTALLED_APPS = [
     "apps.students",
     "apps.announcements",
     "apps.events",
-    "apps.clubs",
     "apps.notifications.apps.NotificationsConfig",
+    "apps.organizations",
 ]
 
 PASSWORD_HASHERS = [

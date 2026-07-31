@@ -1,6 +1,6 @@
 from django.utils import timezone
 
-from rest_framework import viewsets, filters
+from rest_framework import filters, viewsets
 
 from apps.accounts.permissions import IsAdmin
 
@@ -10,14 +10,17 @@ from .serializers import AnnouncementSerializer
 
 class AnnouncementViewSet(viewsets.ModelViewSet):
     """
-    CRUD API for university announcements.
+    CRUD API for organization announcements.
 
     Currently restricted to administrators.
     """
 
     queryset = (
         Announcement.objects
-        .select_related("author")
+        .select_related(
+            "author",
+            "organization",
+        )
         .all()
     )
 
@@ -33,6 +36,7 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
         "title",
         "content",
         "author__username",
+        "organization__name",
     ]
 
     ordering_fields = [
@@ -51,7 +55,8 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
             author=self.request.user,
             published_at=(
                 timezone.now()
-                if serializer.validated_data.get("status") == Announcement.Status.PUBLISHED
+                if serializer.validated_data.get("status")
+                == Announcement.Status.PUBLISHED
                 else None
             ),
         )

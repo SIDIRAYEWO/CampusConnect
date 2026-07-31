@@ -7,6 +7,8 @@ from apps.core.models import (
     SoftDeleteModel,
 )
 
+from apps.organizations.models import Organization
+
 
 class Announcement(
     UUIDModel,
@@ -14,14 +16,8 @@ class Announcement(
     SoftDeleteModel,
 ):
     """
-    University announcements published by administrators.
+    University announcements published by organizations.
     """
-
-    class Audience(models.TextChoices):
-        ALL = "ALL", "All Students"
-        FACULTY = "FACULTY", "Faculty"
-        DEPARTMENT = "DEPARTMENT", "Department"
-        CLUB = "CLUB", "Club"
 
     class Priority(models.TextChoices):
         LOW = "LOW", "Low"
@@ -40,17 +36,19 @@ class Announcement(
         related_name="announcements",
     )
 
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name="announcements",
+        null=True,
+        blank=True,
+    )
+
     title = models.CharField(
         max_length=200,
     )
 
     content = models.TextField()
-
-    audience = models.CharField(
-        max_length=20,
-        choices=Audience.choices,
-        default=Audience.ALL,
-    )
 
     priority = models.CharField(
         max_length=20,
@@ -76,7 +74,7 @@ class Announcement(
 
         indexes = [
             models.Index(fields=["status"]),
-            models.Index(fields=["audience"]),
+            models.Index(fields=["organization"]),
             models.Index(fields=["priority"]),
             models.Index(fields=["published_at"]),
         ]
