@@ -10,6 +10,11 @@ class NotificationSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    organization_name = serializers.CharField(
+        source="organization.name",
+        read_only=True,
+    )
+
     class Meta:
         model = Notification
 
@@ -17,6 +22,8 @@ class NotificationSerializer(serializers.ModelSerializer):
             "id",
             "recipient",
             "recipient_username",
+            "organization",
+            "organization_name",
             "title",
             "message",
             "notification_type",
@@ -28,6 +35,7 @@ class NotificationSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "id",
             "recipient_username",
+            "organization_name",
             "created_at",
             "updated_at",
         ]

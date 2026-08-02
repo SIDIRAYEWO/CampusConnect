@@ -1,5 +1,6 @@
 from django.utils import timezone
-from rest_framework import viewsets, filters
+
+from rest_framework import filters, viewsets
 
 from apps.accounts.permissions import IsAdmin
 
@@ -16,12 +17,18 @@ class EventViewSet(viewsets.ModelViewSet):
 
     queryset = (
         Event.objects
-        .select_related("organizer")
+        .select_related(
+            "organizer",
+            "organization",
+        )
         .all()
     )
 
     serializer_class = EventSerializer
-    permission_classes = [IsAdmin]
+
+    permission_classes = [
+        IsAdmin,
+    ]
 
     filter_backends = [
         filters.SearchFilter,
@@ -33,6 +40,7 @@ class EventViewSet(viewsets.ModelViewSet):
         "description",
         "venue",
         "organizer__username",
+        "organization__name",
     ]
 
     ordering_fields = [
@@ -50,7 +58,9 @@ class EventViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(
             organizer=self.request.user,
-            published_at=timezone.now()
-            if serializer.validated_data.get("status") == Event.Status.PUBLISHED
-            else None,
+            published_at=(
+                timezone.now()
+                if serializer.validated_data.get("status") == Event.Status.PUBLISHED
+                else None
+            ),
         )

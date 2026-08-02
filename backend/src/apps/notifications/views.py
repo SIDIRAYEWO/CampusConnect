@@ -15,12 +15,18 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
     queryset = (
         Notification.objects
-        .select_related("recipient")
+        .select_related(
+            "recipient",
+            "organization",
+        )
         .all()
     )
 
     serializer_class = NotificationSerializer
-    permission_classes = [IsAdmin]
+
+    permission_classes = [
+        IsAdmin,
+    ]
 
     filter_backends = [
         filters.SearchFilter,
@@ -31,6 +37,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
         "title",
         "message",
         "recipient__username",
+        "organization__name",
     ]
 
     ordering_fields = [

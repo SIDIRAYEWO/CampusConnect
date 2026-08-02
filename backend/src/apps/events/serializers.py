@@ -10,6 +10,11 @@ class EventSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    organization_name = serializers.CharField(
+        source="organization.name",
+        read_only=True,
+    )
+
     class Meta:
         model = Event
 
@@ -17,10 +22,11 @@ class EventSerializer(serializers.ModelSerializer):
             "id",
             "organizer",
             "organizer_username",
+            "organization",
+            "organization_name",
             "title",
             "description",
             "event_type",
-            "audience",
             "status",
             "venue",
             "start_time",
@@ -34,6 +40,7 @@ class EventSerializer(serializers.ModelSerializer):
             "id",
             "organizer",
             "organizer_username",
+            "organization_name",
             "published_at",
             "created_at",
             "updated_at",

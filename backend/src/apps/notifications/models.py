@@ -6,6 +6,8 @@ from apps.core.models import (
     TimestampedModel,
 )
 
+from apps.organizations.models import Organization
+
 
 class Notification(
     UUIDModel,
@@ -18,7 +20,7 @@ class Notification(
     class NotificationType(models.TextChoices):
         ANNOUNCEMENT = "ANNOUNCEMENT", "Announcement"
         EVENT = "EVENT", "Event"
-        CLUB = "CLUB", "Club"
+        ORGANIZATION = "ORGANIZATION", "Organization"
         SYSTEM = "SYSTEM", "System"
         SECURITY = "SECURITY", "Security"
 
@@ -26,6 +28,14 @@ class Notification(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="notifications",
+    )
+
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name="notifications",
+        null=True,
+        blank=True,
     )
 
     title = models.CharField(
